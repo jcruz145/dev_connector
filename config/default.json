@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://dev_portal:dev_portal@cluster-dev-portal-lear.nzqfr.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "My Secret Token"
+}
