@@ -1,4 +1,6 @@
 {
     "mongoURI": "mongodb+srv://dev_portal:dev_portal@cluster-dev-portal-lear.nzqfr.mongodb.net/test?retryWrites=true&w=majority",
-    "jwtSecret": "My Secret Token"
+    "jwtSecret": "My Secret Token",
+    "githubSecret": "3c0c72ccff9733e8b63821ad76bc7b973e42db45",
+    "githubClientId": "5f833cc82d26f6da4c91"
 }
