@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+const { request } = require('express');
 
 // @route  POST api/posts
 // @desc   Create a post
@@ -192,12 +193,45 @@ router.post(
       res.json(post.comments);
     } catch (error) {
       console.error(error.message);
-      if (error.kind === 'ObjectId') {
-        return res.status(404).json({ msg: 'Post not found' });
-      }
       res.status(400).send('Server Error');
     }
   }
 );
+
+// @route  DELETE api/posts/comment/:id/:comment_id
+// @desc   Delete a comment on a post
+// @access Private
+
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    const comment = post.comments.find(
+      (comment) => comment.id === req.params.comment_id
+    );
+
+    if (!comment) {
+      return res.status(404).json({ msg: 'Comment not found' });
+    }
+
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    const removeIndex = post.comments
+      .map((comment) => comment.user.toString())
+      .indexOf(req.user.id);
+
+    post.comments.splice(removeIndex, 1);
+
+    await post.save();
+    res.json(post.comments);
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).send('Server Error');
+  }
+});
 
 module.exports = router;
